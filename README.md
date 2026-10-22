@@ -8,6 +8,10 @@ Nothing leaves your machine. No API key, no cloud, no per-token bill.
 
 **Live sample report:** https://senseinate.github.io/slothspec/ · **Real NASA spec report:** https://senseinate.github.io/slothspec/nasa.html
 
+![SlothSpec redline of NASA KSC-DE-512-SM: 333 requirements, 238 flagged by the model, 42 high confidence](docs/slothspec_nasa.png)
+
+Write-up: [docs/post.md](docs/post.md) (the DEV Hacktoberfest 2026 Week 3 submission).
+
 ## Why local
 
 A lot of specs can't be pasted into a hosted chatbot. Proprietary, export controlled, or just "please don't." Running the model on your own box means the tool is actually allowed to touch the documents it was built for.
