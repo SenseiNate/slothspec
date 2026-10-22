@@ -1,0 +1,31 @@
+SMART PET FEEDER (SPF) SYSTEM REQUIREMENTS SPECIFICATION
+Rev A, DRAFT
+
+3.1 Feeding
+
+SPF-001 The SPF shall dispense food at scheduled times.
+SPF-002 The SPF shall dispense a portion of 20 to 200 grams, adjustable in 5 gram increments.
+SPF-003 The SPF shall dispense food quickly and quietly.
+SPF-004 The SPF should notify the owner when the hopper is low.
+SPF-005 The SPF shall store TBD days of food.
+SPF-006 The SPF shall detect jams and shall attempt to clear them and shall notify the owner if the jam persists.
+SPF-007 The hopper shall be easy to clean.
+SPF-008 It shall support multiple pets as appropriate.
+
+3.2 Connectivity
+
+SPF-010 The SPF shall connect to the owner's home Wi-Fi network using WPA2 or WPA3.
+SPF-011 The mobile app will display feeding history, hopper level, device status, etc.
+SPF-012 The SPF shall send notifications in near real-time.
+SPF-013 The SPF shall continue dispensing on schedule during a loss of network connectivity of up to 72 hours.
+SPF-014 Firmware updates shall be applied.
+SPF-015 The SPF shall minimize power consumption.
+
+3.3 Safety and Environment
+
+SPF-020 The SPF shall not dispense more than 3 portions within any 60 minute period.
+SPF-021 The SPF shall operate in ambient temperatures from 0 °C to 40 °C.
+SPF-022 The SPF shall be robust to tampering by pets, including but not limited to pawing, tipping, and chewing.
+SPF-023 The SPF shall operate on battery backup for 48 hours if possible.
+SPF-024 All exterior surfaces in contact with food shall be made of food-safe materials and/or BPA-free plastic.
+SPF-025 The SPF shall withstand a drop of 1 onto a hard floor.

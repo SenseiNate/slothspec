@@ -1,0 +1,4 @@
+__pycache__/
+*.redline.*
+.slothspec_cache.json
+*.egg-info/

@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SlothSpec Redline</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1f1d1a;--mute:#6b665d;--line:#e3ded3;--high:#c2410c;--med:#b45309;--low:#64748b;--ok:#3f7d4e;--acc:#5b4636}
+@media (prefers-color-scheme:dark){:root{--bg:#171512;--card:#211e1a;--ink:#ece7de;--mute:#a39b8e;--line:#36312a;--high:#fb923c;--med:#fbbf24;--low:#94a3b8;--ok:#7fc28f;--acc:#d6b89a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}.sub{color:var(--mute);margin:0 0 22px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.stat b{display:block;font-size:24px}.stat span{color:var(--mute);font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}@media(max-width:640px){.two{grid-template-columns:1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.box h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.box ul{list-style:none;margin:0;padding:0}.box li{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--line)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}.filters button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:13px}.filters button.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.req{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.req.high{border-left-color:var(--high)}.req.med{border-left-color:var(--med)}
+.req header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.req code{font-weight:600}.score{color:var(--mute);font-size:12px}
+.text{margin:0 0 8px;font-size:16px}mark{background:transparent;border-bottom:2px solid;padding:0 1px;color:inherit}mark.high{border-color:var(--high)}mark.med{border-color:var(--med)}mark.low{border-color:var(--low)}
+.findings{margin:0;padding:0;list-style:none;font-size:13.5px;color:var(--mute)}.findings li{margin:3px 0}
+.chip{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 7px;border-radius:999px;margin-right:4px;border:1px solid}.chip.high{color:var(--high)}.chip.med{color:var(--med)}.chip.low{color:var(--low)}
+.okline{color:var(--ok);margin:0;font-size:13.5px}
+.model{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}.mhead{display:flex;gap:8px;align-items:center}
+.verdict{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.v-good{color:var(--ok)}.v-needs-work{color:var(--med)}.v-rewrite{color:var(--high)}
+.vm{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--mute)}
+.issues{margin:6px 0;padding-left:18px;font-size:13.5px}.howto{font-size:13.5px;margin:4px 0;color:var(--mute)}
+.rewrite{background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:14px}.rewrite p{margin:4px 0 0}
+footer{color:var(--mute);font-size:12.5px;margin-top:24px}
+</style></head><body><div class="wrap">
+<h1>🦥 SlothSpec redline</h1>
+<p class="sub">sample_spec.txt · Oct 22 2026 09:22 · rules only · 0s, all local</p>
+<div class="stats">
+  <div class="stat"><b>20</b><span>requirements found</span></div>
+  <div class="stat"><b>16</b><span>flagged</span></div>
+  <div class="stat"><b>8</b><span>with a high-severity hit</span></div>
+  <div class="stat"><b>4</b><span>look clean</span></div>
+</div>
+<div class="two"><div class="box"><h3>Most common problems</h3><ul><li><span>number without unit</span><b>5</b></li><li><span>vague term</span><b>5</b></li><li><span>non-binding verb</span><b>2</b></li><li><span>escape clause</span><b>2</b></li><li><span>open-ended list</span><b>2</b></li><li><span>passive voice</span><b>2</b></li><li><span>absolute</span><b>2</b></li><li><span>open item</span><b>1</b></li></ul></div>
+<div class="box"><h3>Verification methods (model)</h3><ul><li>run with the model to fill this in</li></ul></div></div>
+<div class="filters"><button class="on" data-f="all">All</button><button data-f="high">High</button><button data-f="med">Medium</button><button data-f="ok">Clean</button></div>
+
+        <article class="req high" data-sev="high">
+          <header><code>SPF-008</code><span class="score">score 8</span></header>
+          <p class="text"><mark class="med" title="unclear subject">It</mark> shall support multiple pets <mark class="high" title="escape clause">as appropriate</mark>.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li><li><span class="chip high">escape clause</span> Gives the developer an out. Whoever decides &#x27;possible&#x27; decides whether it&#x27;s met.</li><li><span class="chip med">unclear subject</span> Starts with a pronoun. Out of context, nobody knows what &#x27;it&#x27; is.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-002</code><span class="score">score 6</span></header>
+          <p class="text">The SPF shall dispense a portion of <mark class="med" title="number without unit">20</mark> to <mark class="med" title="number without unit">200</mark> grams, adjustable in <mark class="med" title="number without unit">5</mark> gram increments.</p>
+          <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-022</code><span class="score">score 5</span></header>
+          <p class="text">The SPF shall be <mark class="high" title="vague term">robust</mark> to tampering by pets, <mark class="med" title="open-ended list">including but not limited to</mark> pawing, tipping, and chewing.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li><li><span class="chip med">open-ended list</span> Unbounded scope. Enumerate the full set or reference a table.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-011</code><span class="score">score 4</span></header>
+          <p class="text">The mobile app <mark class="med" title="non-binding verb">will</mark> display feeding history, hopper level, device status, <mark class="med" title="open-ended list">etc</mark>.</p>
+          <ul class="findings"><li><span class="chip med">non-binding verb</span> No &#x27;shall&#x27;. &#x27;Will&#x27; reads as a statement of fact and &#x27;should&#x27; as a goal, so nobody is on the hook to verify it.</li><li><span class="chip med">open-ended list</span> Unbounded scope. Enumerate the full set or reference a table.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-020</code><span class="score">score 4</span></header>
+          <p class="text">The SPF <mark class="low" title="negative requirement">shall not</mark> dispense more than <mark class="med" title="number without unit">3</mark> portions within <mark class="low" title="absolute">any</mark> 60 minute period.</p>
+          <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip low">negative requirement</span> Proving something never happens is hard. Bound it (conditions, duration, probability).</li><li><span class="chip low">absolute</span> Absolutes are hard to verify. Confirm it&#x27;s really meant to be unbounded.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-024</code><span class="score">score 4</span></header>
+          <p class="text"><mark class="low" title="absolute">All</mark> exterior surfaces in contact with food <mark class="low" title="passive voice">shall be made</mark> of food-safe materials <mark class="med" title="and/or">and/or</mark> BPA-free plastic.</p>
+          <ul class="findings"><li><span class="chip med">and/or</span> Ambiguous: is one enough, or are both required?</li><li><span class="chip low">absolute</span> Absolutes are hard to verify. Confirm it&#x27;s really meant to be unbounded.</li><li><span class="chip low">passive voice</span> Passive with no actor. Say which system/element does it.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-003</code><span class="score">score 3</span></header>
+          <p class="text">The SPF shall dispense food <mark class="high" title="vague term">quickly</mark> and quietly.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-005</code><span class="score">score 3</span></header>
+          <p class="text">The SPF shall store <mark class="high" title="open item">TBD</mark> days of food.</p>
+          <ul class="findings"><li><span class="chip high">open item</span> Placeholder value. Can&#x27;t be verified until it&#x27;s closed out.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-006</code><span class="score">score 3</span></header>
+          <p class="text">The SPF shall detect jams and shall attempt to clear them and shall notify the owner if the jam persists.</p>
+          <ul class="findings"><li><span class="chip high">compound requirement</span> More than one thing being required. Split it so each piece can pass or fail on its own.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-007</code><span class="score">score 3</span></header>
+          <p class="text">The hopper shall be <mark class="high" title="vague term">easy</mark> to clean.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-012</code><span class="score">score 3</span></header>
+          <p class="text">The SPF shall send notifications in <mark class="high" title="vague term">near real-time</mark>.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
+          
+        </article>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-023</code><span class="score">score 3</span></header>
+          <p class="text">The SPF shall operate on battery backup for 48 hours <mark class="high" title="escape clause">if possible</mark>.</p>
+          <ul class="findings"><li><span class="chip high">escape clause</span> Gives the developer an out. Whoever decides &#x27;possible&#x27; decides whether it&#x27;s met.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-004</code><span class="score">score 2</span></header>
+          <p class="text">The SPF <mark class="med" title="non-binding verb">should</mark> notify the owner when the hopper is low.</p>
+          <ul class="findings"><li><span class="chip med">non-binding verb</span> No &#x27;shall&#x27;. &#x27;Will&#x27; reads as a statement of fact and &#x27;should&#x27; as a goal, so nobody is on the hook to verify it.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-015</code><span class="score">score 2</span></header>
+          <p class="text">The SPF shall <mark class="med" title="optimization goal">minimize</mark> power consumption.</p>
+          <ul class="findings"><li><span class="chip med">optimization goal</span> Minimize/maximize has no pass line. Give a threshold value.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-025</code><span class="score">score 2</span></header>
+          <p class="text">The SPF shall withstand a drop of <mark class="med" title="number without unit">1</mark> onto a hard floor.</p>
+          <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li></ul>
+          
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-014</code><span class="score">score 1</span></header>
+          <p class="text">Firmware updates <mark class="low" title="passive voice">shall be applied</mark>.</p>
+          <ul class="findings"><li><span class="chip low">passive voice</span> Passive with no actor. Say which system/element does it.</li></ul>
+          
+        </article>
+        <article class="req ok" data-sev="ok">
+          <header><code>SPF-001</code><span class="score">score 0</span></header>
+          <p class="text">The SPF shall dispense food at scheduled times.</p>
+          <p class="okline">No pattern hits.</p>
+          
+        </article>
+        <article class="req ok" data-sev="ok">
+          <header><code>SPF-010</code><span class="score">score 0</span></header>
+          <p class="text">The SPF shall connect to the owner&#x27;s home Wi-Fi network using WPA2 or WPA3.</p>
+          <p class="okline">No pattern hits.</p>
+          
+        </article>
+        <article class="req ok" data-sev="ok">
+          <header><code>SPF-013</code><span class="score">score 0</span></header>
+          <p class="text">The SPF shall continue dispensing on schedule during a loss of network connectivity of up to 72 hours.</p>
+          <p class="okline">No pattern hits.</p>
+          
+        </article>
+        <article class="req ok" data-sev="ok">
+          <header><code>SPF-021</code><span class="score">score 0</span></header>
+          <p class="text">The SPF shall operate in ambient temperatures from 0 °C to 40 °C.</p>
+          <p class="okline">No pattern hits.</p>
+          
+        </article>
+<footer>Worst first. Pattern checks are deterministic; model notes are suggestions, not gospel. Nothing in this report left this machine.</footer>
+</div><script>
+document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');const f=b.dataset.f;document.querySelectorAll('.req').forEach(r=>r.style.display=(f==='all'||r.dataset.sev===f)?'':'none')});
+</script></body></html>
