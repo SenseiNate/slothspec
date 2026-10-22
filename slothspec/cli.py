@@ -3,6 +3,7 @@
   slothspec review spec.docx                 # one file, report lands next to it
   slothspec watch ~/Specs/inbox              # leave it running, drop files in, walk away
   slothspec review spec.pdf --rules-only     # no model, instant
+  slothspec review spec.pdf --verbs shall    # only "shall" counts (when should = guidance)
   slothspec review spec.docx --grader gemma4:e2b --editor gemma4
                                              # hybrid: small model grades, big model rewrites
 """
@@ -15,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import llm
-from .extract import extract
+from .extract import ALL_VERBS, extract
 from .report import write_csv, write_html
 from .rules import check
 
@@ -56,10 +57,10 @@ def _needs_edit(r) -> bool:
     return r.llm.get("verdict") != "good" or any(f.severity in ("high", "med") for f in r.findings)
 
 
-def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False) -> Path:
+def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False, verbs: tuple[str, ...] = ALL_VERBS) -> Path:
     say = (lambda *a, **k: None) if quiet else (lambda *a, **k: print(*a, **k, flush=True))
     t0 = time.time()
-    reqs = extract(path)
+    reqs = extract(path, verbs)
     say(f"[slothspec] {path.name}: {len(reqs)} requirement statements")
     for r in reqs:
         r.findings = check(r.text)
@@ -115,7 +116,7 @@ def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False) -> Path:
     return html_path
 
 
-def watch(folder: Path, plan: Plan, interval: int) -> None:
+def watch(folder: Path, plan: Plan, interval: int, verbs: tuple[str, ...] = ALL_VERBS) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     done = folder / "reviewed"
     done.mkdir(exist_ok=True)
@@ -129,7 +130,7 @@ def watch(folder: Path, plan: Plan, interval: int) -> None:
                     size = p.stat().st_size
                     time.sleep(1)
                 try:
-                    run(p, done, plan)
+                    run(p, done, plan, verbs=verbs)
                     p.rename(done / p.name)
                 except Exception as e:  # noqa: BLE001
                     print(f"[slothspec] {p.name} failed: {e}", file=sys.stderr)
@@ -147,11 +148,18 @@ def main(argv=None) -> None:
         s.add_argument("--grader", help="hybrid mode: model that grades every requirement (e.g. gemma4:e2b)")
         s.add_argument("--editor", help="hybrid mode: model that rewrites flagged requirements (e.g. gemma4)")
         s.add_argument("--rules-only", action="store_true", help="skip the model, pattern checks only")
+        s.add_argument("--verbs", default=",".join(ALL_VERBS),
+                       help="which binding verbs count as requirements (default: %(default)s). "
+                            "Use --verbs shall for specs where should/will mean guidance.")
         if name == "review":
             s.add_argument("--out", type=Path, help="output folder (default: next to the file)")
         else:
             s.add_argument("--interval", type=int, default=10, help="seconds between folder checks")
     a = ap.parse_args(argv)
+
+    verbs = tuple(v.strip().lower() for v in a.verbs.split(",") if v.strip())
+    if not verbs or any(v not in ALL_VERBS for v in verbs):
+        sys.exit(f"[slothspec] --verbs must be a comma list of: {', '.join(ALL_VERBS)}")
 
     if a.rules_only:
         plan = Plan()
@@ -170,9 +178,9 @@ def main(argv=None) -> None:
     if a.cmd == "review":
         out = a.out or a.path.parent
         out.mkdir(parents=True, exist_ok=True)
-        run(a.path, out, plan)
+        run(a.path, out, plan, verbs=verbs)
     else:
-        watch(a.path, plan, a.interval)
+        watch(a.path, plan, a.interval, verbs)
 
 
 if __name__ == "__main__":

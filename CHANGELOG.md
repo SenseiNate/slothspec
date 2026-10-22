@@ -2,6 +2,24 @@
 
 All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted problems, 5 clean), run on a 16 GB laptop with integrated AMD graphics, CPU inference.
 
+## [Unreleased] (v0.4.0)
+
+First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release ground support equipment design standard. v0.3.0 had only ever seen the clean 20-line sample spec.
+
+### Fixed
+- **PDF extraction on real documents.** v0.3.0 pulled 451 "requirements" from the NASA doc, with page footers glued onto them, table-of-contents lines, the revision history, and a referenced standard's name ("IPC-6018") stamped on 16 of them as an ID. Now:
+  - running headers/footers stripped (lines repeating across pages, page numbers ignored)
+  - table-of-contents dot-leader lines skipped
+  - IDs follow the document's own outline: heading `5.4.7` + item `a.` = `5.4.7a`, nested `(2)` then `(a)` = `6.3.1.1b(2)(a)`
+  - headings must count up in order, so table rows and numbered lists can't pose as sections
+  - "Rationale:" / "Note:" text and sentences that only mention "shall" in quotes are skipped
+  - stops at the DD 1426 / SF 298 forms stapled to the back of NASA and DoD documents
+  - explicit IDs like `SPF-001` must be followed by the sentence, so a standard named at the start of a list line isn't read as an ID
+  - Result on the NASA doc: 333 shall requirements, every one with its real section ID, no duplicates, no junk. Sample spec output unchanged.
+
+### Added
+- `--verbs` option. Some specs define "should" as guidance, not a requirement (this NASA doc says so in its foreword). `--verbs shall` respects that. Default is still all four verbs.
+
 ## [0.3.0] - 2026-10-22
 
 ### Results
