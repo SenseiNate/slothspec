@@ -19,8 +19,22 @@ SYSTEM = """You are a senior systems engineer doing a requirements review before
 You grade single requirement statements against the usual good-requirement
 characteristics: necessary, unambiguous, singular, verifiable, complete, feasible.
 
+Verdict rubric (be calibrated, not picky):
+- good: one testable thing, clear subject, a tester could write pass/fail criteria today.
+  Style nitpicks and "could add more detail" do NOT make it needs work. Plenty of real requirements are good.
+- needs work: intent is clear but one small fix is needed (add a unit, swap one vague word, split in two, fill a TBD).
+- rewrite: can't be verified as written, or a reader can't tell what is actually required.
+
+Example good: "The radar shall report target range with an accuracy of 10 m (1 sigma) or better."
+Example good: "The pump shall deliver 5 to 50 L/min, adjustable in 1 L/min steps." (range + resolution is one capability, not compound)
+Example good: "The heater shall not exceed a surface temperature of 60 °C." (a bounded "shall not" is fine)
+Example needs work: "The console should log errors." (should, and which errors?)
+Example rewrite: "The system shall be user-friendly." (nothing to test)
+
 Rules for your answer:
-- Be blunt and specific. No filler.
+- Be specific. No filler. Issues are short, one line each. Empty list if good.
+- Don't invent details the author didn't write (formats, units of display, extra behaviors). Use <<placeholders>> instead.
+- Don't redefine plain words ("connect", "on schedule") as ambiguous unless a tester would genuinely be stuck.
 - Never invent numbers. If a threshold is missing, put a placeholder like <<max latency, ms>> in the rewrite.
 - Keep the original intent. Don't add scope.
 - If the statement bundles several requirements, the rewrite should be several "shall" sentences separated by newlines.
@@ -85,19 +99,24 @@ def review(text: str, rule_hits: list[str], model: str = DEFAULT_MODEL, cache: C
     if cache and (hit := cache.get(k)):
         return hit
 
-    hints = "\n".join(f"- {h}" for h in rule_hits) or "- none"
-    user = f"Requirement:\n{text}\n\nThe pattern checker already flagged:\n{hints}\n\nReview it."
-    r = requests.post(
-        f"{OLLAMA_URL}/api/chat",
-        json={
-            "model": model,
-            "stream": False,
-            "format": SCHEMA,
-            "options": {"temperature": 0, "num_ctx": 4096},
-            "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
-        },
-        timeout=300,
-    )
+    if rule_hits:
+        hints = "The pattern checker already flagged:\n" + "\n".join(f"- {h}" for h in rule_hits)
+    else:
+        hints = "The pattern checker found nothing. Only mark it needs work if there's a real verification problem."
+    user = f"Requirement:\n{text}\n\n{hints}\n\nReview it."
+    body = {
+        "model": model,
+        "stream": False,
+        "format": SCHEMA,
+        # no hidden reasoning tokens: this is a quick per-line judgment, and on a CPU every token costs
+        "think": False,
+        "options": {"temperature": 0, "num_ctx": 4096, "num_predict": 400},
+        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
+    }
+    r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, timeout=300)
+    if r.status_code == 400 and "think" in r.text.lower():
+        body.pop("think")  # model without a thinking switch
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, timeout=300)
     r.raise_for_status()
     out = json.loads(r.json()["message"]["content"])
     if cache:
