@@ -159,4 +159,9 @@ SEV_WEIGHT = {"high": 3, "med": 2, "low": 1}
 
 
 def score(findings: list[Finding]) -> int:
-    return sum(SEV_WEIGHT[x.severity] for x in findings)
+    """Each rule counts once per requirement, at its worst severity. Otherwise three stray
+    digits from a mangled chemical formula outrank a real escape clause (seen on the NASA doc)."""
+    worst: dict[str, int] = {}
+    for f in findings:
+        worst[f.rule] = max(worst.get(f.rule, 0), SEV_WEIGHT[f.severity])
+    return sum(worst.values())

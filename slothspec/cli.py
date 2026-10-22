@@ -65,6 +65,7 @@ def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False, verbs: tuple
     for r in reqs:
         r.findings = check(r.text)
     timing: dict[str, float] = {}
+    cached = 0
 
     if plan.models:
         cache = llm.Cache(out_dir / ".slothspec_cache.json")
@@ -79,6 +80,7 @@ def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False, verbs: tuple
                     r.llm = _error_result(e, r.text)
                 say(f"  {i}/{len(reqs)} {r.rid}: {r.llm.get('verdict')}")
             timing["review"] = time.time() - t
+            cached = cache.hits
         else:
             # pass 1: small model grades everything
             t = time.time()
@@ -105,10 +107,11 @@ def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False, verbs: tuple
                     r.llm.setdefault("issues", []).append(f"editor error: {e}")
                 say(f"  {i}/{len(todo)} {r.rid}: rewritten")
             timing["edit"] = time.time() - t
+            cached = cache.hits
 
     stem = path.stem
     html_path = out_dir / f"{stem}.redline.html"
-    write_html(reqs, html_path, path.name, plan.label, time.time() - t0, timing)
+    write_html(reqs, html_path, path.name, plan.label, time.time() - t0, timing, cached)
     write_csv(reqs, out_dir / f"{stem}.redline.csv")
     stages = "  ".join(f"{k} {v:.0f}s" for k, v in timing.items())
     say(f"[slothspec] done in {time.time() - t0:.0f}s ({stages}) -> {html_path}" if stages

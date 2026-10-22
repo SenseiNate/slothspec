@@ -151,8 +151,13 @@ class Cache:
     def key(model: str, system: str, user: str) -> str:
         return hashlib.sha256(f"{model}\n{system}\n{user}".encode()).hexdigest()[:24]
 
+    hits = 0
+
     def get(self, k):
-        return self.data.get(k)
+        v = self.data.get(k)
+        if v is not None:
+            self.hits += 1
+        return v
 
     def put(self, k, v):
         self.data[k] = v

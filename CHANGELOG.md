@@ -2,6 +2,13 @@
 
 All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted problems, 5 clean), run on a 16 GB laptop with integrated AMD graphics, CPU inference.
 
+## [0.4.1] - 2026-10-22
+
+### Changed
+- **Report leads with high-confidence findings.** On the NASA report the first card was 5.2.3, where the PDF had mangled chemical formulas into loose digits ("N O", "50 2 4"): each stray digit counted as a separate "number without unit" hit and pushed it to the top. Now requirements where the model flagged it AND a medium/high pattern check fired come first (green "high confidence" badge, plus a filter button), and each rule counts once per requirement in the score.
+- **Header stats match how results are reported.** With a model run the header shows found / flagged by the model / high confidence / model says good (NASA: 333 / 238 / 42 / 95). Before, "flagged" counted any pattern hit including low-severity ones (257), which didn't match the 238 in RESULTS.md. Rules-only reports keep the old stats.
+- Report subtitle says how many model answers came from the cache, so a report regenerated from cache doesn't claim the run took 5 seconds.
+
 ## [0.4.0] - 2026-10-22
 
 First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release ground support equipment design standard. v0.3.0 had only ever seen the clean 20-line sample spec.
