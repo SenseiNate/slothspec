@@ -28,7 +28,7 @@ def write_csv(reqs, path: Path) -> None:
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["ID", "Requirement", "Score", "Rule findings", "Model verdict", "Verifiable", "Singular",
-                    "Model issues", "Verification method", "How to verify", "Suggested rewrite"])
+                    "Model issues", "Verification method", "How to verify", "Suggested rewrite", "Rewritten by"])
         for r in reqs:
             m = r.llm or {}
             w.writerow([
@@ -36,11 +36,12 @@ def write_csv(reqs, path: Path) -> None:
                 "; ".join(f"{f.rule}: {f.match}" for f in r.findings),
                 m.get("verdict", ""), m.get("verifiable", ""), m.get("singular", ""),
                 "; ".join(m.get("issues", [])), m.get("verification_method", ""),
-                m.get("how_to_verify", ""), m.get("rewrite", ""),
+                m.get("how_to_verify", ""), m.get("rewrite", ""), m.get("editor", ""),
             ])
 
 
-def write_html(reqs, path: Path, source: str, model: str | None, seconds: float) -> None:
+def write_html(reqs, path: Path, source: str, model: str | None, seconds: float,
+               timing: dict | None = None) -> None:
     total = len(reqs)
     clean = sum(1 for r in reqs if not r.findings and (not r.llm or r.llm.get("verdict") == "good"))
     flagged = total - clean
@@ -65,7 +66,7 @@ def write_html(reqs, path: Path, source: str, model: str | None, seconds: float)
             model_block = f"""
             <div class="model">
               <div class="mhead"><span class="verdict v-{m.get('verdict','').replace(' ','-')}">{html.escape(m.get('verdict',''))}</span>
-              <span class="vm">{html.escape(m.get('verification_method',''))}</span></div>
+              <span class="vm">{html.escape(m.get('verification_method',''))}</span>{f'<span class="vm">rewrite: {html.escape(m["editor"])}</span>' if m.get('editor') else ''}</div>
               {f'<ul class="issues">{issues}</ul>' if issues else ''}
               <p class="howto"><b>Verify by:</b> {html.escape(m.get('how_to_verify',''))}</p>
               <div class="rewrite"><b>Suggested rewrite</b><p>{rewrite}</p></div>
@@ -110,7 +111,7 @@ h1{{font-size:26px;margin:0 0 4px}}.sub{{color:var(--mute);margin:0 0 22px}}
 footer{{color:var(--mute);font-size:12.5px;margin-top:24px}}
 </style></head><body><div class="wrap">
 <h1>🦥 SlothSpec redline</h1>
-<p class="sub">{html.escape(source)} · {datetime.now():%b %d %Y %H:%M} · {html.escape(model or 'rules only')} · {seconds:.0f}s, all local</p>
+<p class="sub">{html.escape(source)} · {datetime.now():%b %d %Y %H:%M} · {html.escape(model or 'rules only')} · {seconds:.0f}s{(' (' + ', '.join(f'{k} {v:.0f}s' for k, v in timing.items()) + ')') if timing else ''}, all local</p>
 <div class="stats">
   <div class="stat"><b>{total}</b><span>requirements found</span></div>
   <div class="stat"><b>{flagged}</b><span>flagged</span></div>
