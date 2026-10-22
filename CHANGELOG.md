@@ -9,6 +9,7 @@ All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted 
 - Report header and CSV show time per pass and which model wrote each rewrite (`Rewritten by` column, added at the end so existing columns don't move).
 
 ### Changed
+- **Editor scratchpad.** The hybrid editor now lists `problems` in its own words before writing the `rewrite`. First hybrid test: the editor had only a rewrite field and fixed 11 of 15, vs 14 of 15 for single mode, where the model writes its issues list before the rewrite. The editor is also told the grader's notes may be incomplete or overreaching, and to drop notes that add scope.
 - Prompts split into pieces (rubric, grading rules, rewrite rules, verification rules) so each model only gets instructions for its own job.
 - Two new rewrite rules from observed misses: don't drop any part of the requirement (e2b dropped "quietly" from SPF-003) and keep and/or logic honest (e4b turned and/or into AND on SPF-024). Applies to single mode too.
 
