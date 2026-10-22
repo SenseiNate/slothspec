@@ -123,8 +123,12 @@ def ping(model: str = DEFAULT_MODEL) -> None:
         raise OllamaUnavailable(
             f"Can't reach Ollama at {OLLAMA_URL}. Start it with `ollama serve`, or run with --rules-only."
         ) from e
-    names = {m["name"].split(":")[0] for m in r.json().get("models", [])} | {m["name"] for m in r.json().get("models", [])}
-    if model not in names and model.split(":")[0] not in names:
+    def norm(tag: str) -> str:
+        # Ollama treats "gemma4" and "gemma4:latest" as the same model; any other tag must match exactly
+        return tag if ":" in tag else f"{tag}:latest"
+
+    pulled = {norm(m["name"]) for m in r.json().get("models", [])}
+    if norm(model) not in pulled:
         raise OllamaUnavailable(f"Model '{model}' isn't pulled yet. Run: ollama pull {model}")
 
 
