@@ -1,0 +1,197 @@
+[
+ {
+  "id": "SPF-001",
+  "text": "The SPF shall dispense food at scheduled times.",
+  "rules": []
+ },
+ {
+  "id": "SPF-002",
+  "text": "The SPF shall dispense a portion of 20 to 200 grams, adjustable in 5 gram increments.",
+  "rules": []
+ },
+ {
+  "id": "SPF-003",
+  "text": "The SPF shall dispense food quickly and quietly.",
+  "rules": [
+   [
+    "vague term",
+    "quickly"
+   ],
+   [
+    "vague term",
+    "quietly"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-004",
+  "text": "The SPF should notify the owner when the hopper is low.",
+  "rules": [
+   [
+    "non-binding verb",
+    "should"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-005",
+  "text": "The SPF shall store TBD days of food.",
+  "rules": [
+   [
+    "open item",
+    "TBD"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-006",
+  "text": "The SPF shall detect jams and shall attempt to clear them and shall notify the owner if the jam persists.",
+  "rules": [
+   [
+    "compound requirement",
+    "multiple actions"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-007",
+  "text": "The hopper shall be easy to clean.",
+  "rules": [
+   [
+    "vague term",
+    "easy"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-008",
+  "text": "It shall support multiple pets as appropriate.",
+  "rules": [
+   [
+    "escape clause",
+    "as appropriate"
+   ],
+   [
+    "unclear subject",
+    "It"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-010",
+  "text": "The SPF shall connect to the owner's home Wi-Fi network using WPA2 or WPA3.",
+  "rules": []
+ },
+ {
+  "id": "SPF-011",
+  "text": "The mobile app will display feeding history, hopper level, device status, etc.",
+  "rules": [
+   [
+    "non-binding verb",
+    "will"
+   ],
+   [
+    "open-ended list",
+    "etc"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-012",
+  "text": "The SPF shall send notifications in near real-time.",
+  "rules": [
+   [
+    "vague term",
+    "near real-time"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-013",
+  "text": "The SPF shall continue dispensing on schedule during a loss of network connectivity of up to 72 hours.",
+  "rules": []
+ },
+ {
+  "id": "SPF-014",
+  "text": "Firmware updates shall be applied.",
+  "rules": [
+   [
+    "passive voice",
+    "shall be applied"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-015",
+  "text": "The SPF shall minimize power consumption.",
+  "rules": [
+   [
+    "optimization goal",
+    "minimize"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-020",
+  "text": "The SPF shall not dispense more than 3 portions within any 60 minute period.",
+  "rules": [
+   [
+    "negative requirement",
+    "shall not"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-021",
+  "text": "The SPF shall operate in ambient temperatures from 0 °C to 40 °C.",
+  "rules": []
+ },
+ {
+  "id": "SPF-022",
+  "text": "The SPF shall be robust to tampering by pets, including but not limited to pawing, tipping, and chewing.",
+  "rules": [
+   [
+    "vague term",
+    "robust"
+   ],
+   [
+    "open-ended list",
+    "including but not limited to"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-023",
+  "text": "The SPF shall operate on battery backup for 48 hours if possible.",
+  "rules": [
+   [
+    "escape clause",
+    "if possible"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-024",
+  "text": "All exterior surfaces in contact with food shall be made of food-safe materials and/or BPA-free plastic.",
+  "rules": [
+   [
+    "and/or",
+    "and/or"
+   ],
+   [
+    "absolute",
+    "All"
+   ]
+  ]
+ },
+ {
+  "id": "SPF-025",
+  "text": "The SPF shall withstand a drop of 1 onto a hard floor.",
+  "rules": [
+   [
+    "number without unit",
+    "1"
+   ]
+  ]
+ }
+]

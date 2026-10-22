@@ -68,10 +68,19 @@ On a 20-requirement spec, differences of 2 or 3 are within run-to-run noise. The
 | `--grader MODEL` / `--editor MODEL` | hybrid mode. If you give only one, the other uses `--model`. |
 | `--model MODEL` | single mode model (default `gemma4`). Any Ollama tag works. |
 | `--rules-only` | skip the model |
+| `--verbs shall` | which verbs count as requirements (default `shall,must,will,should`). Use `shall` when the spec defines "should" as guidance. |
 | `--out DIR` | where to write the report (review) |
 | `--interval N` | seconds between folder checks (watch) |
 
 Env vars: `OLLAMA_HOST` (default `http://localhost:11434`), `SLOTHSPEC_MODEL`.
+
+## Tests
+
+```bash
+python tests/test_regression.py     # or: python -m pytest tests
+```
+
+No model or network needed. Locks in the sample spec output and the pattern rules, so a change that breaks extraction shows up immediately.
 
 ## How it works
 
