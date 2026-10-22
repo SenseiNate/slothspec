@@ -43,7 +43,7 @@ def write_csv(reqs, path: Path) -> None:
 def _high_confidence(r) -> bool:
     """The model flagged it AND a medium/high pattern check fired. On the NASA doc these were
     the comments worth sending; model-only flags were pickier."""
-    return bool(r.llm) and r.llm.get("verdict") != "good" and any(f.severity in ("high", "med") for f in r.findings)
+    return bool(r.llm) and r.llm.get("verdict") not in ("good", "error") and any(f.severity in ("high", "med") for f in r.findings)
 
 
 def write_html(reqs, path: Path, source: str, model: str | None, seconds: float,
@@ -52,7 +52,8 @@ def write_html(reqs, path: Path, source: str, model: str | None, seconds: float,
     ran_model = any(r.llm for r in reqs)
     clean = sum(1 for r in reqs if not r.findings and (not r.llm or r.llm.get("verdict") == "good"))
     flagged = total - clean
-    model_flagged = sum(1 for r in reqs if r.llm and r.llm.get("verdict") != "good")
+    model_flagged = sum(1 for r in reqs if r.llm and r.llm.get("verdict") not in ("good", "error"))
+    errors = sum(1 for r in reqs if r.llm and r.llm.get("verdict") == "error")
     confident = sum(1 for r in reqs if _high_confidence(r))
     rules = Counter(f.rule for r in reqs for f in r.findings)
     methods = Counter((r.llm or {}).get("verification_method") for r in reqs if r.llm)
@@ -91,7 +92,7 @@ def write_html(reqs, path: Path, source: str, model: str | None, seconds: float,
     if ran_model:
         stats = [(total, "requirements found"), (model_flagged, "flagged by the model"),
                  (confident, "high confidence: pattern check and model agree"),
-                 (total - model_flagged, "model says good")]
+                 (sum(1 for r in reqs if r.llm and r.llm.get("verdict") == "good"), "model says good")]
     else:
         stats = [(total, "requirements found"), (flagged, "with a pattern hit"),
                  (high, "with a high-severity hit"), (clean, "look clean")]
@@ -99,6 +100,8 @@ def write_html(reqs, path: Path, source: str, model: str | None, seconds: float,
     run_note = f"{seconds:.0f}s" + ((" (" + ", ".join(f"{k} {v:.0f}s" for k, v in timing.items()) + ")") if timing else "")
     if cached:
         run_note += f"; {cached} model answers reused from an earlier run's cache"
+    if errors:
+        run_note += f"; {errors} model call{'s' if errors > 1 else ''} failed (marked error, not counted as flags)"
     top = "".join(f"<li><span>{html.escape(k)}</span><b>{v}</b></li>" for k, v in rules.most_common(8))
     meth = "".join(f"<li><span>{html.escape(k)}</span><b>{v}</b></li>" for k, v in methods.most_common() if k)
     doc = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -124,7 +127,7 @@ h1{{font-size:26px;margin:0 0 4px}}.sub{{color:var(--mute);margin:0 0 22px}}
 .chip{{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 7px;border-radius:999px;margin-right:4px;border:1px solid}}.chip.high{{color:var(--high)}}.chip.med{{color:var(--med)}}.chip.low{{color:var(--low)}}
 .okline{{color:var(--ok);margin:0;font-size:13.5px}}
 .model{{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}}.mhead{{display:flex;gap:8px;align-items:center}}
-.verdict{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}}.v-good{{color:var(--ok)}}.v-needs-work{{color:var(--med)}}.v-rewrite{{color:var(--high)}}
+.verdict{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}}.v-good{{color:var(--ok)}}.v-needs-work{{color:var(--med)}}.v-rewrite{{color:var(--high)}}.v-error{{color:var(--low)}}
 .vm{{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--mute)}}
 .issues{{margin:6px 0;padding-left:18px;font-size:13.5px}}.howto{{font-size:13.5px;margin:4px 0;color:var(--mute)}}
 .rewrite{{background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:14px}}.rewrite p{{margin:4px 0 0}}

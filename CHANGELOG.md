@@ -9,6 +9,10 @@ All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted 
 - **Header stats match how results are reported.** With a model run the header shows found / flagged by the model / high confidence / model says good (NASA: 333 / 238 / 42 / 95). Before, "flagged" counted any pattern hit including low-severity ones (257), which didn't match the 238 in RESULTS.md. Rules-only reports keep the old stats.
 - Report subtitle says how many model answers came from the cache, so a report regenerated from cache doesn't claim the run took 5 seconds.
 
+### Fixed
+- **Long answers cut off at the output cap.** In NASA run 2, the answer for 5.4.19.2 (a requirement listing a pile of IPC standards) hit the 400-token cap and came back as broken JSON. Now a cut-off answer is retried once with a 1000-token cap; short answers stay fast.
+- **A failed model call was labeled "needs work."** That counted it as a flag. Failed calls now show as "error", are left out of the flag counts, and the report subtitle says how many failed. Because of this, the v0.4.0 notes overstated run 2 by one: it had 1 model error, not 0, and 5.4.19.2 was counted as a flag the model never actually made.
+
 ## [0.4.0] - 2026-10-22
 
 First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release ground support equipment design standard. v0.3.0 had only ever seen the clean 20-line sample spec.

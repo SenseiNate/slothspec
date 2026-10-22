@@ -46,7 +46,8 @@ class Plan:
 
 
 def _error_result(e: Exception, text: str) -> dict:
-    return {"verdict": "needs work", "verifiable": False, "singular": False,
+    # "error", not "needs work": a failed call must not be counted as a flag
+    return {"verdict": "error", "verifiable": False, "singular": False,
             "issues": [f"model error: {e}"], "verification_method": "Inspection",
             "how_to_verify": "", "rewrite": text}
 
@@ -54,7 +55,7 @@ def _error_result(e: Exception, text: str) -> dict:
 def _needs_edit(r) -> bool:
     """Send to the editor if the grader flagged it, or regex found a real problem.
     The regex is the safety net: a TBD gets fixed even if the small model shrugs."""
-    return r.llm.get("verdict") != "good" or any(f.severity in ("high", "med") for f in r.findings)
+    return r.llm.get("verdict") not in ("good", "error") or any(f.severity in ("high", "med") for f in r.findings)
 
 
 def run(path: Path, out_dir: Path, plan: Plan, quiet: bool = False, verbs: tuple[str, ...] = ALL_VERBS) -> Path:

@@ -188,7 +188,15 @@ def _call(model: str, system: str, user: str, schema: dict, cache: Cache | None)
         body.pop("think")  # model without a thinking switch
         r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, timeout=300)
     r.raise_for_status()
-    out = json.loads(r.json()["message"]["content"])
+    try:
+        out = json.loads(r.json()["message"]["content"])
+    except json.JSONDecodeError:
+        # Answer got cut off at the output cap (seen on NASA 5.4.19.2, a requirement that lists
+        # a pile of standards). Retry once with more room; short answers stay fast.
+        body["options"]["num_predict"] = 1000
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, timeout=600)
+        r.raise_for_status()
+        out = json.loads(r.json()["message"]["content"])
     if cache:
         cache.put(k, out)
     return out
