@@ -2,10 +2,26 @@
 
 All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted problems, 5 clean), run on a 16 GB laptop with integrated AMD graphics, CPU inference.
 
-## [Unreleased] (v0.3.0)
+## [0.3.0] - 2026-10-22
+
+### Results
+| | single, gemma4 (e4b) | hybrid (e2b grades, e4b rewrites) |
+|---|---|---|
+| Time | 3.4 min | 4.9 min |
+| Problems caught (of 15) | 15 | 15 |
+| Clean reqs left alone (of 5) | 3 | 5 |
+| Rewrites that fixed it (of 15) | 11 to 14 | 11 |
+
+**Single mode with gemma4 stays the recommended default.** Hybrid fixed the false alarms but was slower and its rewrites were no better.
+
+### Tried and reverted
+- Gave the hybrid editor a `problems` scratchpad before the rewrite, on the theory that single mode's issues list acts as a reasoning step. Result: 7 of 15 fixed (down from 11), edit pass 2.0 to 3.8 min. Told to "find what the grader missed," it added scope: integrity checks nobody asked for, a food type, an escape clause put back in. Reverted in 65d8ebc.
+
+### Known limitation
+- "and/or" on SPF-024 became two mandatory requirements in every run, every model, despite a prompt rule against it.
 
 ### Added
-- **Hybrid mode** (`--grader` / `--editor`). A small model grades every requirement; a bigger model rewrites only the ones flagged by the grader or by a medium/high pattern check. Based on v0.2.0 results: e2b was the better grader, e4b the better editor.
+- **Hybrid mode** (`--grader` / `--editor`, experimental). A small model grades every requirement; a bigger model rewrites only the ones flagged by the grader or by a medium/high pattern check. Based on v0.2.0 results: e2b was the better grader, e4b the better editor.
 - Report header and CSV show time per pass and which model wrote each rewrite (`Rewritten by` column, added at the end so existing columns don't move).
 
 ### Changed

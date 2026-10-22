@@ -15,18 +15,17 @@ A lot of specs can't be pasted into a hosted chatbot. Proprietary, export contro
 ## Quick start
 
 ```bash
-# 1. get Ollama + Gemma 4 (both sizes for hybrid mode)
-ollama pull gemma4        # e4b, the editor
-ollama pull gemma4:e2b    # the grader
+# 1. get Ollama + Gemma 4
+ollama pull gemma4
 
 # 2. install
 pip install -e .
 
-# 3. recommended: hybrid mode
-slothspec review examples/sample_spec.txt --grader gemma4:e2b --editor gemma4
+# 3. one file
+slothspec review examples/sample_spec.txt
 
 # or the lazy way: leave it watching a folder
-slothspec watch ~/Specs/inbox --grader gemma4:e2b --editor gemma4
+slothspec watch ~/Specs/inbox
 ```
 
 On Windows, if `slothspec` isn't found after install, use `python -m slothspec` instead.
@@ -37,22 +36,30 @@ Reports land as `<name>.redline.html` (open in a browser) and `<name>.redline.cs
 
 | mode | command | what happens |
 |---|---|---|
-| **hybrid** (recommended) | `--grader gemma4:e2b --editor gemma4` | Small model grades every requirement. Big model rewrites only the ones that need it. |
-| single | `--model gemma4` (default) | One model grades and rewrites everything. |
+| **single** (default, recommended) | `--model gemma4` | One model grades and rewrites every requirement. |
+| hybrid (experimental) | `--grader gemma4:e2b --editor gemma4` | Small model grades everything; big model rewrites only what got flagged. |
 | rules only | `--rules-only` | Pattern checks only. No model, instant. |
 
-Why hybrid: on the sample spec, the two sizes turned out to be good at different jobs.
+## Results
 
-| sample spec, 20 reqs, 16 GB laptop, CPU only | gemma4 (e4b) | gemma4:e2b |
-|---|---|---|
-| Planted problems caught (of 15) | 15 | 15 |
-| Clean requirements left alone (of 5) | 3 | **5** |
-| Rewrites that actually fixed it (of 15) | **13** | 8 |
-| Time, single mode | 5.2 min | 3.5 min |
+Sample spec: 20 requirements (15 with planted problems, 5 clean). 16 GB laptop, integrated graphics, CPU only. Full history in [CHANGELOG.md](CHANGELOG.md).
 
-The small model is the better judge; the big model is the better editor. Hybrid uses each for what it's good at, and the big model never wastes time on requirements that are already fine.
+| latest run of each | single, gemma4 (e4b) | single, gemma4:e2b (v0.2.0) | hybrid |
+|---|---|---|---|
+| Planted problems caught (of 15) | 15 | 15 | 15 |
+| Clean requirements left alone (of 5) | 3 | **5** | **5** |
+| Rewrites that actually fixed it (of 15) | **11 to 14** | 8 | 11 |
+| Time | **3.4 min** | 3.5 min | 4.9 min |
 
-A requirement goes to the editor if the grader flags it **or** if the pattern checks found a medium/high problem. The regex is the safety net: a TBD gets fixed even if the small model misses it.
+What held up across every run:
+- Every model caught every planted problem, every version.
+- e2b is the better grader: it never flagged a clean requirement. e4b flags 2 of 5 that are fine.
+- e4b writes better rewrites. Every run.
+- Hybrid (e2b grades, e4b rewrites) looked like the best of both on paper. It never beat e4b alone: slower every time, rewrites no better. It's kept as an option if false alarms bother you more than rewrite quality.
+
+Known limitation: "food-safe materials and/or BPA-free plastic" came back as two mandatory requirements (AND) in every run, every model. If your spec uses and/or, read those rewrites carefully.
+
+On a 20-requirement spec, differences of 2 or 3 are within run-to-run noise. The e4b range is across two runs with a one-line prompt change between them.
 
 ## Options
 
