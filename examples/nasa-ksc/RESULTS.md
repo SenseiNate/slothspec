@@ -13,7 +13,7 @@ Real-world test of SlothSpec on a published, approved NASA design standard. See 
 | "in accordance with [standard]" flagged | 141 of 149 | **77 of 149** |
 | Real catches kept (pattern + model agree) | 42 | **42, none lost** |
 | Time | 58 min 17 s | 56 min (shared the CPU with another run for its first ~4 min) |
-| Model errors | 0 | 0 |
+| Model errors | 0 | 1 (5.4.19.2, answer cut off at the output cap; fixed in v0.4.1, see below) |
 
 One rubric line (pointing to a named standard is complete) cleared 74 false alarms, 64 of them pure standard references like "Vacuum systems shall be designed in accordance with ASME B31.9." Every real catch from the baseline is still flagged.
 
@@ -61,6 +61,8 @@ Verdicts: 95 good, 217 needs work, 21 rewrite. Transitions from baseline: 74 nee
 What's still flagged (238) is spread out, with no single blind spot left: vague or not measurable (88, some fair, some picky), compound (39), external reference (27, mostly "program-defined methodology", which is a fair catch), missing actor (26), plus a long tail. Stopped tuning here; another round would be chasing noise.
 
 All seven example catches above are still flagged in v0.4.0.
+
+**Correction (v0.4.1):** this run had 1 model error, not 0 as first reported. The answer for 5.4.19.2, a requirement that lists a long run of IPC standards, hit the 400-token output cap and came back as broken JSON. The tool labeled the failure "needs work", so it was counted as a flag the model never made. v0.4.1 retries cut-off answers with a bigger cap and labels failures "error". Re-running just that requirement (the other 332 came from cache) gave a real "needs work", so the totals above are unchanged: 238 flagged, 42 high confidence, 95 good, now 0 errors.
 
 ### Takeaways
 
