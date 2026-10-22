@@ -39,8 +39,12 @@ Rules for your answer:
 - Keep the original intent. Don't add scope.
 - If the statement bundles several requirements, the rewrite should be several "shall" sentences separated by newlines.
 - Pick the verification method a test engineer would most likely use: Inspection, Analysis, Demonstration, or Test.
+- how_to_verify is one sentence describing what the tester physically does (e.g. "Drop the unit from the
+  specified height onto concrete and run a functional check."). It is never a requirement and never just a method name.
 - If the requirement is already good, say so and return it unchanged as the rewrite."""
 
+# Field order matters: the model fills these top to bottom. Putting rewrite right after
+# issues keeps the fix from leaking into how_to_verify (seen in v0.2.0 with gemma4:e4b).
 SCHEMA = {
     "type": "object",
     "properties": {
@@ -48,11 +52,11 @@ SCHEMA = {
         "verifiable": {"type": "boolean"},
         "singular": {"type": "boolean"},
         "issues": {"type": "array", "items": {"type": "string"}, "maxItems": 4},
+        "rewrite": {"type": "string"},
         "verification_method": {"type": "string", "enum": ["Inspection", "Analysis", "Demonstration", "Test"]},
         "how_to_verify": {"type": "string"},
-        "rewrite": {"type": "string"},
     },
-    "required": ["verdict", "verifiable", "singular", "issues", "verification_method", "how_to_verify", "rewrite"],
+    "required": ["verdict", "verifiable", "singular", "issues", "rewrite", "verification_method", "how_to_verify"],
 }
 
 
