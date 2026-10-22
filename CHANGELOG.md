@@ -2,9 +2,22 @@
 
 All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted problems, 5 clean), run on a 16 GB laptop with integrated AMD graphics, CPU inference.
 
-## [Unreleased] (v0.4.0)
+## [0.4.0] - 2026-10-22
 
 First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release ground support equipment design standard. v0.3.0 had only ever seen the clean 20-line sample spec.
+
+### Results
+| NASA doc, gemma4 | baseline | v0.4.0 |
+|---|---|---|
+| Flagged | 312 of 333 (94%) | 238 (71%) |
+| "in accordance with" flagged | 141 of 149 | 77 |
+| Real catches kept | 42 | 42 (none lost) |
+| Time | 58 min | 56 min |
+
+Sample spec (regression check): 15/15 caught, 3/5 clean left alone, 13/15 rewrites fixed. Same as v0.3.0 within noise.
+
+### Known limitation
+- Still flags 71% of an approved NASA standard. What's left is spread across vague, compound, and missing-actor complaints with no single fixable cause. The 42 requirements where a medium/high pattern check and the model agree are the high-confidence comments; the report sorts pattern hits to the top, so they're easy to find.
 
 ### Fixed
 - **PDF extraction on real documents.** v0.3.0 pulled 451 "requirements" from the NASA doc, with page footers glued onto them, table-of-contents lines, the revision history, and a referenced standard's name ("IPC-6018") stamped on 16 of them as an ID. Now:

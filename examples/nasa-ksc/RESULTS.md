@@ -4,6 +4,21 @@ Real-world test of SlothSpec on a published, approved NASA design standard. See 
 
 **Setup:** `slothspec review KSC-DE-512-SM-RevL.pdf --verbs shall`, single mode, `gemma4` (e4b), Ollama, 16 GB laptop with integrated AMD graphics, CPU only.
 
+## Summary
+
+| | Baseline (2d5d7aa) | v0.4.0 (71f71b0) |
+|---|---|---|
+| Shall requirements | 333 | 333 |
+| Flagged | 312 (94%) | **238 (71%)** |
+| "in accordance with [standard]" flagged | 141 of 149 | **77 of 149** |
+| Real catches kept (pattern + model agree) | 42 | **42, none lost** |
+| Time | 58 min 17 s | 56 min (shared the CPU with another run for its first ~4 min) |
+| Model errors | 0 | 0 |
+
+One rubric line (pointing to a named standard is complete) cleared 74 false alarms, 64 of them pure standard references like "Vacuum systems shall be designed in accordance with ASME B31.9." Every real catch from the baseline is still flagged.
+
+**How to read the report:** it sorts worst first by pattern-check score, so requirements with pattern hits come up top. The ones the model also flagged (42 with a medium/high hit) are the high-confidence comments. Model-only flags further down are worth a skim but are pickier.
+
 ## Baseline run (code at 2d5d7aa)
 
 File: [results-baseline.csv](results-baseline.csv)
@@ -37,8 +52,19 @@ File: [results-baseline.csv](results-baseline.csv)
 | 4.2.3.4a | assessment performed "*early* in the design phase" | "...at `<<design phase milestone>>`..." |
 | 4.2.3.1a | "physically oriented or separated" with no separation criteria (model only, no pattern hit) | flagged as unverifiable without a separation distance or orientation criteria |
 
+## v0.4.0 run (code at 71f71b0)
+
+File: [results-v0.4.0.csv](results-v0.4.0.csv)
+
+Verdicts: 95 good, 217 needs work, 21 rewrite. Transitions from baseline: 74 needs work to good, 5 rewrite to needs work, 1 needs work to rewrite, everything else unchanged.
+
+What's still flagged (238) is spread out, with no single blind spot left: vague or not measurable (88, some fair, some picky), compound (39), external reference (27, mostly "program-defined methodology", which is a fair catch), missing actor (26), plus a long tail. Stopped tuning here; another round would be chasing noise.
+
+All seven example catches above are still flagged in v0.4.0.
+
 ### Takeaways
 
 - Extraction and runtime held up on a real 97-page document: every requirement got its real section ID, zero crashes, about an hour unattended.
-- The useful signal is where the pattern checks and the model agree. The report sorts worst first, so those land at the top.
-- One blind spot drove nearly half the noise: treating "in accordance with [standard]" as a defect. Addressed in the next commit with one rubric example (taken from an unrelated field, FCC Part 15, which this document never mentions).
+- The useful signal is where the pattern checks and the model agree. The report sorts pattern hits to the top, so that's where to start reading.
+- One blind spot drove nearly half the noise: treating "in accordance with [standard]" as a defect. One rubric example (from an unrelated field, FCC Part 15, which this document never mentions) cut flags from 94% to 71% without losing a single real catch.
+- The model is still pickier than a human reviewer would be. Trust the top of the report; skim the rest.

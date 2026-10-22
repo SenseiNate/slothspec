@@ -6,7 +6,7 @@ SlothSpec reads a spec (.docx, .pdf, .txt, .md), pulls out every "shall" stateme
 
 Nothing leaves your machine. No API key, no cloud, no per-token bill.
 
-**Live sample report:** https://senseinate.github.io/slothspec/
+**Live sample report:** https://senseinate.github.io/slothspec/ · **Real NASA spec report:** https://senseinate.github.io/slothspec/nasa.html
 
 ## Why local
 
@@ -61,6 +61,19 @@ Known limitation: "food-safe materials and/or BPA-free plastic" came back as two
 
 On a 20-requirement spec, differences of 2 or 3 are within run-to-run noise. The e4b range is across two runs with a one-line prompt change between them.
 
+### Real-world test: NASA KSC-DE-512-SM
+
+A 97-page NASA Kennedy ground support equipment design standard, approved for public release ([details](examples/nasa-ksc/RESULTS.md)). `--verbs shall`, gemma4, same laptop.
+
+| | |
+|---|---|
+| Shall requirements extracted | 333, each with its real section ID (`5.4.7a`, `6.3.1.1b(2)(a)`) |
+| Time | about 56 to 58 min, unattended |
+| Flagged | 238 (71%), down from 94% before the standard-reference fix |
+| High-confidence (pattern checks and model agree) | 42, near the top of the report (it sorts pattern hits first) |
+
+Real catches include "mitigated to an acceptable level" (acceptable to whom?), filters "as close as possible" to flight hardware, "certified as required", and redundant systems "physically oriented or separated" with no separation criteria. The model is still pickier than a human reviewer; trust the top of the report and skim the rest.
+
 ## Options
 
 | flag | what it does |
@@ -84,7 +97,7 @@ No model or network needed. Locks in the sample spec output and the pattern rule
 
 ## How it works
 
-1. **Extract.** Splits the doc into sentences with a binding verb and grabs IDs like `SYS-042` or `3.2.1.4`.
+1. **Extract.** Pulls every sentence with a binding verb. IDs come from the line (`SYS-042`) or the document's own outline (`5.4.7a`). Strips PDF headers, footers, tables of contents, rationale notes, and the government forms stapled to the back.
 2. **Pattern checks.** Deterministic regex rules. Fast, free, same flags every time.
 3. **Model pass.** Each requirement plus its pattern hits goes to the local model with a fixed JSON schema, so output is always structured. Temperature 0, thinking off. The model is told never to invent numbers; missing thresholds come back as `<<placeholders>>`.
 4. **Cache.** Answers are keyed by model + prompt + text, so re-running after you fix 3 requirements only re-checks those 3.
