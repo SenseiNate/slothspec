@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 
 import requests
@@ -61,6 +62,7 @@ Rules for your answer:
 {RULES_COMMON}
 {RULES_REWRITE}
 {RULES_VERIFY}
+- The rewrite field holds only "shall" statements. Never put verification steps, method names, or field labels in it.
 - If the requirement is already good, say so and return it unchanged as the rewrite."""
 
 # hybrid pass 1: grade only
@@ -184,10 +186,30 @@ def _call(model: str, system: str, user: str, schema: dict, cache: Cache | None)
     return out
 
 
+_LABEL_LINE = re.compile(r"^\s*(how[_ ]to[_ ]verify|verification[_ ]method|verdict|issues|problems|rewrite)\s*:", re.I)
+_TRAILING_TAG = re.compile(r"\s*\((Inspection|Analysis|Demonstration|Test)\)\s*$", re.I)
+
+
+def clean_rewrite(rewrite: str) -> str:
+    """Safety net for the rewrite field. Models sometimes tack other fields onto it
+    (seen in v0.3.0 single mode: "how_to_verify: ..." lines, trailing "(Test)").
+    The prompt asks them not to; this makes sure."""
+    lines = []
+    for line in rewrite.splitlines():
+        if _LABEL_LINE.match(line):
+            continue
+        line = _TRAILING_TAG.sub("", line).rstrip()
+        if line.strip():
+            lines.append(line)
+    return "\n".join(lines)
+
+
 def review(text: str, rule_hits: list[str], model: str = DEFAULT_MODEL, cache: Cache | None = None) -> dict:
     """Single mode: one model grades and rewrites."""
     user = f"Requirement:\n{text}\n\n{_hints(rule_hits)}\n\nReview it."
-    return _call(model, SYSTEM, user, SCHEMA, cache)
+    out = dict(_call(model, SYSTEM, user, SCHEMA, cache))
+    out["rewrite"] = clean_rewrite(out.get("rewrite", "")) or text
+    return out
 
 
 def grade(text: str, rule_hits: list[str], model: str, cache: Cache | None = None) -> dict:

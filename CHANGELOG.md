@@ -14,6 +14,7 @@ All results are on `examples/sample_spec.txt` (20 requirements: 15 with planted 
 
 ### Fixed
 - Rewrites leaking into the "how to verify" field (about 9 of 20 rows with e4b in v0.2.0). Ollama fills JSON fields in schema order, and `how_to_verify` came before `rewrite`. Reordered the schema and defined the field in the prompt.
+- Single mode tacking other fields onto the rewrite (3 of 20 rows with e4b had a "how_to_verify:" line, one had a trailing "(Test)"). Prompt now says the rewrite holds only shall statements, and `clean_rewrite()` strips label lines and trailing method tags as a deterministic safety net.
 - Model check accepted any tag with a matching base name (asking for `gemma4:31b` passed if `gemma4:e2b` was pulled, then every request failed). Present since v0.1.0.
 
 ## [0.2.0] - 2026-10-22
