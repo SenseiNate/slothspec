@@ -23,7 +23,11 @@ First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release
   - "vague term": dropped "standard" (usually means the document) and "flexible" (usually a cable type).
   - Only change on the sample spec: SPF-024 no longer gets a low-severity passive flag for "shall be made of food-safe materials".
 
+### Changed
+- **Pointing to a standard is no longer treated as a defect.** Baseline run on the NASA doc flagged 141 of its 149 "shall be in accordance with [standard]" requirements for relying on an external document. That's how design standards are supposed to work. Rubric gains one example (FCC Part 15, a field the NASA doc never mentions) and one rule line. See `examples/nasa-ksc/RESULTS.md`.
+
 ### Added
+- `examples/nasa-ksc/RESULTS.md` and `results-baseline.csv`: the first full model run on the NASA doc and a breakdown of what got flagged.
 - `examples/nasa-ksc/`: the NASA KSC-DE-512-SM Rev L PDF (public release, U.S. Government work) with a SOURCE.md giving provenance, distribution statement, SHA-256, and the command to reproduce.
 - `tests/test_regression.py`: no model, no network, about a second. Locks in the sample spec's extraction and rule hits, the number/passive rules (15 real-world cases from the NASA doc), the `--verbs` filter, and the rewrite cleanup. Runs with pytest or plain `python tests/test_regression.py`.
 - `--verbs` option. Some specs define "should" as guidance, not a requirement (this NASA doc says so in its foreword). `--verbs shall` respects that. Default is still all four verbs.

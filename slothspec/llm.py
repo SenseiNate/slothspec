@@ -38,12 +38,15 @@ Verdict rubric (be calibrated, not picky):
 Example good: "The radar shall report target range with an accuracy of 10 m (1 sigma) or better."
 Example good: "The pump shall deliver 5 to 50 L/min, adjustable in 1 L/min steps." (range + resolution is one capability, not compound)
 Example good: "The heater shall not exceed a surface temperature of 60 °C." (a bounded "shall not" is fine)
+Example good: "The transmitter shall comply with FCC Part 15, Subpart B." (pointing to a named standard is complete:
+  the tester verifies against that standard, so don't ask for its contents to be restated)
 Example needs work: "The console should log errors." (should, and which errors?)
 Example rewrite: "The system shall be user-friendly." (nothing to test)"""
 
 RULES_COMMON = """- Be specific. No filler. Issues are short, one line each. Empty list if good.
 - Don't invent details the author didn't write (formats, units of display, extra behaviors). Use <<placeholders>> instead.
-- Don't redefine plain words ("connect", "on schedule") as ambiguous unless a tester would genuinely be stuck."""
+- Don't redefine plain words ("connect", "on schedule") as ambiguous unless a tester would genuinely be stuck.
+- A requirement that defers to a named standard, specification, drawing, or table is not vague for doing so."""
 
 RULES_REWRITE = """- Never invent numbers. If a threshold is missing, put a placeholder like <<max latency, ms>> in the rewrite.
 - Keep the original intent. Don't add scope, and don't drop any part of what was required.
