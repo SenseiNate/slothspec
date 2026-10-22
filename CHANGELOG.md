@@ -17,6 +17,12 @@ First run on a real document: NASA KSC-DE-512-SM Rev L, a 97-page public-release
   - explicit IDs like `SPF-001` must be followed by the sentence, so a standard named at the start of a list line isn't read as an ID
   - Result on the NASA doc: 333 shall requirements, every one with its real section ID, no duplicates, no junk. Sample spec output unchanged.
 
+- **Pattern-check false alarms on real engineering text.** On the NASA doc, v0.3.0 flagged 224 of 333 requirements, mostly noise. Now 104, with 42 medium/high:
+  - "number without unit" (82 to 7): skips references (Table 1, see 6, NFPA 70, Article 500, Category 1, criticality 1, 1S, or 2), title numbers (29 CFR 1910), slash standards (AMS 2759/9), factors of safety, inline list markers; knows MPa, psia, psig, ksi; keeps thousands like 1,240 together. The 7 left are chemical subscripts the PDF stores as loose digits (N2O4 comes out as "N O 2 4").
+  - "passive voice" (155 to 38): only fires when someone has to do something and the sentence doesn't say who ("shall be performed", "shall be applied"). "GS shall be designed in accordance with X" is normal spec language.
+  - "vague term": dropped "standard" (usually means the document) and "flexible" (usually a cable type).
+  - Only change on the sample spec: SPF-024 no longer gets a low-severity passive flag for "shall be made of food-safe materials".
+
 ### Added
 - `--verbs` option. Some specs define "should" as guidance, not a requirement (this NASA doc says so in its foreword). `--verbs shall` respects that. Default is still all four verbs.
 
