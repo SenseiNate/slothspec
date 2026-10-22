@@ -1,7 +1,7 @@
 [project]
 name = "slothspec"
-version = "0.1.0"
-description = "Local requirements linter: drop a spec in, get a redline back. Runs on open-weight models through Ollama."
+version = "0.3.0"
+description = "Local requirements linter: drop a spec in, get a redline back. Hybrid grading and rewriting on open-weight Gemma 4 through Ollama."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
