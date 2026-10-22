@@ -28,136 +28,276 @@ h1{font-size:26px;margin:0 0 4px}.sub{color:var(--mute);margin:0 0 22px}
 footer{color:var(--mute);font-size:12.5px;margin-top:24px}
 </style></head><body><div class="wrap">
 <h1>🦥 SlothSpec redline</h1>
-<p class="sub">sample_spec.txt · Oct 22 2026 09:22 · rules only · 0s, all local</p>
+<p class="sub">sample_spec.txt · Oct 22 2026 12:01 · gemma4 · 199s (review 199s), all local</p>
 <div class="stats">
   <div class="stat"><b>20</b><span>requirements found</span></div>
-  <div class="stat"><b>16</b><span>flagged</span></div>
+  <div class="stat"><b>18</b><span>flagged</span></div>
   <div class="stat"><b>8</b><span>with a high-severity hit</span></div>
-  <div class="stat"><b>4</b><span>look clean</span></div>
+  <div class="stat"><b>2</b><span>look clean</span></div>
 </div>
-<div class="two"><div class="box"><h3>Most common problems</h3><ul><li><span>number without unit</span><b>5</b></li><li><span>vague term</span><b>5</b></li><li><span>non-binding verb</span><b>2</b></li><li><span>escape clause</span><b>2</b></li><li><span>open-ended list</span><b>2</b></li><li><span>passive voice</span><b>2</b></li><li><span>absolute</span><b>2</b></li><li><span>open item</span><b>1</b></li></ul></div>
-<div class="box"><h3>Verification methods (model)</h3><ul><li>run with the model to fill this in</li></ul></div></div>
+<div class="two"><div class="box"><h3>Most common problems</h3><ul><li><span>vague term</span><b>5</b></li><li><span>non-binding verb</span><b>2</b></li><li><span>escape clause</span><b>2</b></li><li><span>open-ended list</span><b>2</b></li><li><span>passive voice</span><b>2</b></li><li><span>open item</span><b>1</b></li><li><span>compound requirement</span><b>1</b></li><li><span>unclear subject</span><b>1</b></li></ul></div>
+<div class="box"><h3>Verification methods (model)</h3><ul><li><span>Test</span><b>14</b></li><li><span>Inspection</span><b>4</b></li><li><span>Analysis</span><b>1</b></li><li><span>Demonstration</span><b>1</b></li></ul></div></div>
 <div class="filters"><button class="on" data-f="all">All</button><button data-f="high">High</button><button data-f="med">Medium</button><button data-f="ok">Clean</button></div>
 
         <article class="req high" data-sev="high">
-          <header><code>SPF-008</code><span class="score">score 8</span></header>
-          <p class="text"><mark class="med" title="unclear subject">It</mark> shall support multiple pets <mark class="high" title="escape clause">as appropriate</mark>.</p>
-          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li><li><span class="chip high">escape clause</span> Gives the developer an out. Whoever decides &#x27;possible&#x27; decides whether it&#x27;s met.</li><li><span class="chip med">unclear subject</span> Starts with a pronoun. Out of context, nobody knows what &#x27;it&#x27; is.</li></ul>
+          <header><code>SPF-003</code><span class="score">score 6</span></header>
+          <p class="text">The SPF shall dispense food <mark class="high" title="vague term">quickly</mark> and <mark class="high" title="vague term">quietly</mark>.</p>
+          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The requirement lacks measurable criteria for &#x27;quickly&#x27; and &#x27;quietly&#x27;.</li></ul>
+              <p class="howto"><b>Verify by:</b> Measure the time taken for a full dispense cycle and measure the noise level during operation.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall dispense food within &lt;&lt;max dispense time&gt;&gt;. The SPF shall operate with a noise level not exceeding &lt;&lt;max noise level&gt;&gt; dB.</p></div>
+            </div>
         </article>
-        <article class="req med" data-sev="med">
-          <header><code>SPF-002</code><span class="score">score 6</span></header>
-          <p class="text">The SPF shall dispense a portion of <mark class="med" title="number without unit">20</mark> to <mark class="med" title="number without unit">200</mark> grams, adjustable in <mark class="med" title="number without unit">5</mark> gram increments.</p>
-          <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li></ul>
+        <article class="req high" data-sev="high">
+          <header><code>SPF-008</code><span class="score">score 5</span></header>
+          <p class="text"><mark class="med" title="unclear subject">It</mark> shall support multiple pets <mark class="high" title="escape clause">as appropriate</mark>.</p>
+          <ul class="findings"><li><span class="chip high">escape clause</span> Gives the developer an out. Whoever decides &#x27;possible&#x27; decides whether it&#x27;s met.</li><li><span class="chip med">unclear subject</span> Starts with a pronoun. Out of context, nobody knows what &#x27;it&#x27; is.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The subject &#x27;It&#x27; is unclear; specify the system component that shall support pets.</li><li>The qualifier &#x27;as appropriate&#x27; is subjective and non-verifiable.</li></ul>
+              <p class="howto"><b>Verify by:</b> Configure the system to handle &lt;&lt;N&gt;&gt; pets and verify successful operation.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The &lt;&lt;System Component&gt;&gt; shall support a minimum of &lt;&lt;N&gt;&gt; pets.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-022</code><span class="score">score 5</span></header>
           <p class="text">The SPF shall be <mark class="high" title="vague term">robust</mark> to tampering by pets, <mark class="med" title="open-ended list">including but not limited to</mark> pawing, tipping, and chewing.</p>
           <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li><li><span class="chip med">open-ended list</span> Unbounded scope. Enumerate the full set or reference a table.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The term &#x27;robust&#x27; is not measurable.</li><li>The scope of tampering is too broad and not quantifiable.</li></ul>
+              <p class="howto"><b>Verify by:</b> Subject the SPF to specified physical stresses (pawing, tipping, chewing) and verify that its functionality remains within specified operational limits.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall withstand pawing forces up to &lt;&lt;max force, N&gt;&gt; without functional degradation.<br>The SPF shall withstand tipping forces up to &lt;&lt;max force, N&gt;&gt; without functional degradation.<br>The SPF shall withstand chewing forces from &lt;&lt;pet type&gt;&gt; without functional degradation.</p></div>
+            </div>
         </article>
-        <article class="req med" data-sev="med">
+        <article class="req high" data-sev="high">
           <header><code>SPF-011</code><span class="score">score 4</span></header>
           <p class="text">The mobile app <mark class="med" title="non-binding verb">will</mark> display feeding history, hopper level, device status, <mark class="med" title="open-ended list">etc</mark>.</p>
           <ul class="findings"><li><span class="chip med">non-binding verb</span> No &#x27;shall&#x27;. &#x27;Will&#x27; reads as a statement of fact and &#x27;should&#x27; as a goal, so nobody is on the hook to verify it.</li><li><span class="chip med">open-ended list</span> Unbounded scope. Enumerate the full set or reference a table.</li></ul>
           
-        </article>
-        <article class="req med" data-sev="med">
-          <header><code>SPF-020</code><span class="score">score 4</span></header>
-          <p class="text">The SPF <mark class="low" title="negative requirement">shall not</mark> dispense more than <mark class="med" title="number without unit">3</mark> portions within <mark class="low" title="absolute">any</mark> 60 minute period.</p>
-          <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li><li><span class="chip low">negative requirement</span> Proving something never happens is hard. Bound it (conditions, duration, probability).</li><li><span class="chip low">absolute</span> Absolutes are hard to verify. Confirm it&#x27;s really meant to be unbounded.</li></ul>
-          
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Inspection</span></div>
+              <ul class="issues"><li>The requirement lists multiple distinct functions without specifying the required behavior for each.</li></ul>
+              <p class="howto"><b>Verify by:</b> Inspect the mobile application interface to confirm the presence and display of the specified data points.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The mobile app shall display feeding history.<br>The mobile app shall display hopper level.<br>The mobile app shall display device status.</p></div>
+            </div>
         </article>
         <article class="req med" data-sev="med">
           <header><code>SPF-024</code><span class="score">score 4</span></header>
           <p class="text"><mark class="low" title="absolute">All</mark> exterior surfaces in contact with food <mark class="low" title="passive voice">shall be made</mark> of food-safe materials <mark class="med" title="and/or">and/or</mark> BPA-free plastic.</p>
           <ul class="findings"><li><span class="chip med">and/or</span> Ambiguous: is one enough, or are both required?</li><li><span class="chip low">absolute</span> Absolutes are hard to verify. Confirm it&#x27;s really meant to be unbounded.</li><li><span class="chip low">passive voice</span> Passive with no actor. Say which system/element does it.</li></ul>
           
-        </article>
-        <article class="req high" data-sev="high">
-          <header><code>SPF-003</code><span class="score">score 3</span></header>
-          <p class="text">The SPF shall dispense food <mark class="high" title="vague term">quickly</mark> and quietly.</p>
-          <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
-          
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Inspection</span></div>
+              <ul class="issues"><li>The requirement bundles two distinct material requirements (food-safe AND BPA-free) using &#x27;and/or&#x27;, which needs clarification on the required state.</li></ul>
+              <p class="howto"><b>Verify by:</b> Inspect the material composition of all exterior surfaces in contact with food to confirm compliance with material specifications.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>Exterior surfaces in contact with food shall be made of food-safe materials.<br>Exterior surfaces in contact with food shall be made of BPA-free plastic.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-005</code><span class="score">score 3</span></header>
           <p class="text">The SPF shall store <mark class="high" title="open item">TBD</mark> days of food.</p>
           <ul class="findings"><li><span class="chip high">open item</span> Placeholder value. Can&#x27;t be verified until it&#x27;s closed out.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Analysis</span></div>
+              <ul class="issues"><li>TBD days must be replaced with a specific numerical value.</li></ul>
+              <p class="howto"><b>Verify by:</b> Review the system design documentation to confirm the specified storage duration.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall store &lt;&lt;number&gt;&gt; days of food.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-006</code><span class="score">score 3</span></header>
           <p class="text">The SPF shall detect jams and shall attempt to clear them and shall notify the owner if the jam persists.</p>
           <ul class="findings"><li><span class="chip high">compound requirement</span> More than one thing being required. Split it so each piece can pass or fail on its own.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The requirement bundles three distinct actions (detect, attempt to clear, notify) and lacks measurable criteria for &#x27;detect,&#x27; &#x27;attempt to clear,&#x27; and &#x27;persists&#x27;.</li></ul>
+              <p class="howto"><b>Verify by:</b> Induce a jam condition and verify the SPF detects it, attempts clearance, and notifies the owner if the jam remains.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall detect a jam within &lt;&lt;time&gt;&gt;, and shall attempt to clear the jam using &lt;&lt;method&gt;&gt;; if the jam persists after &lt;&lt;attempts&gt;&gt;, the SPF shall notify the owner.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-007</code><span class="score">score 3</span></header>
           <p class="text">The hopper shall be <mark class="high" title="vague term">easy</mark> to clean.</p>
           <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Demonstration</span></div>
+              <ul class="issues"><li>The term &#x27;easy to clean&#x27; is not measurable.</li></ul>
+              <p class="howto"><b>Verify by:</b> A tester shall clean the hopper using the specified method and measure the time taken against the defined limit.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The hopper shall allow cleaning using a &lt;&lt;cleaning method&gt;&gt; within &lt;&lt;time limit&gt;&gt;.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-012</code><span class="score">score 3</span></header>
           <p class="text">The SPF shall send notifications in <mark class="high" title="vague term">near real-time</mark>.</p>
           <ul class="findings"><li><span class="chip high">vague term</span> Subjective word with no measurable threshold. Two testers would grade it differently.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The term &#x27;near real-time&#x27; is not measurable.</li></ul>
+              <p class="howto"><b>Verify by:</b> Measure the time elapsed between an event occurring and the corresponding notification being received by the recipient.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall send notifications within &lt;&lt;max latency, ms&gt;&gt; of the event occurrence.</p></div>
+            </div>
         </article>
         <article class="req high" data-sev="high">
           <header><code>SPF-023</code><span class="score">score 3</span></header>
           <p class="text">The SPF shall operate on battery backup for 48 hours <mark class="high" title="escape clause">if possible</mark>.</p>
           <ul class="findings"><li><span class="chip high">escape clause</span> Gives the developer an out. Whoever decides &#x27;possible&#x27; decides whether it&#x27;s met.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The phrase &#x27;if possible&#x27; makes the requirement non-verifiable.</li></ul>
+              <p class="howto"><b>Verify by:</b> Connect the SPF to battery power and monitor operation for 48 hours.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall operate on battery backup for 48 hours.</p></div>
+            </div>
         </article>
         <article class="req med" data-sev="med">
           <header><code>SPF-004</code><span class="score">score 2</span></header>
           <p class="text">The SPF <mark class="med" title="non-binding verb">should</mark> notify the owner when the hopper is low.</p>
           <ul class="findings"><li><span class="chip med">non-binding verb</span> No &#x27;shall&#x27;. &#x27;Will&#x27; reads as a statement of fact and &#x27;should&#x27; as a goal, so nobody is on the hook to verify it.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>Replace &#x27;should&#x27; with a mandatory verb like &#x27;shall&#x27;.</li></ul>
+              <p class="howto"><b>Verify by:</b> Simulate the hopper level dropping below the specified threshold and verify the owner notification is generated.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall notify the owner when the hopper level is below &lt;&lt;low threshold&gt;&gt;.</p></div>
+            </div>
         </article>
-        <article class="req med" data-sev="med">
+        <article class="req high" data-sev="high">
           <header><code>SPF-015</code><span class="score">score 2</span></header>
           <p class="text">The SPF shall <mark class="med" title="optimization goal">minimize</mark> power consumption.</p>
           <ul class="findings"><li><span class="chip med">optimization goal</span> Minimize/maximize has no pass line. Give a threshold value.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The term &#x27;minimize&#x27; is not measurable.</li></ul>
+              <p class="howto"><b>Verify by:</b> Measure the power consumption of the SPF while operating under the specified conditions and confirm it does not exceed the defined limit.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall maintain power consumption at or below &lt;&lt;max power consumption, W&gt;&gt; under &lt;&lt;operating condition&gt;&gt;.</p></div>
+            </div>
         </article>
         <article class="req med" data-sev="med">
           <header><code>SPF-025</code><span class="score">score 2</span></header>
           <p class="text">The SPF shall withstand a drop of <mark class="med" title="number without unit">1</mark> onto a hard floor.</p>
           <ul class="findings"><li><span class="chip med">number without unit</span> Value with no unit or tolerance.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The drop height is missing a unit.</li></ul>
+              <p class="howto"><b>Verify by:</b> Drop the SPF from the specified height onto a hard floor and inspect for damage.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall withstand a drop of &lt;&lt;drop height, unit&gt;&gt; onto a hard floor.</p></div>
+            </div>
         </article>
-        <article class="req med" data-sev="med">
+        <article class="req high" data-sev="high">
           <header><code>SPF-014</code><span class="score">score 1</span></header>
           <p class="text">Firmware updates <mark class="low" title="passive voice">shall be applied</mark>.</p>
           <ul class="findings"><li><span class="chip low">passive voice</span> Passive with no actor. Say which system/element does it.</li></ul>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-rewrite">rewrite</span>
+              <span class="vm">Inspection</span></div>
+              <ul class="issues"><li>The requirement lacks specificity regarding the update mechanism, success criteria, or scope.</li></ul>
+              <p class="howto"><b>Verify by:</b> Inspect the system documentation to confirm the supported update mechanism.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The system shall support firmware updates via &lt;&lt;update mechanism&gt;&gt;.</p></div>
+            </div>
+        </article>
+        <article class="req med" data-sev="med">
+          <header><code>SPF-020</code><span class="score">score 1</span></header>
+          <p class="text">The SPF <mark class="low" title="negative requirement">shall not</mark> dispense more than 3 portions within any 60 minute period.</p>
+          <ul class="findings"><li><span class="chip low">negative requirement</span> Proving something never happens is hard. Bound it (conditions, duration, probability).</li></ul>
+          
+            <div class="model">
+              <div class="mhead"><span class="verdict v-good">good</span>
+              <span class="vm">Test</span></div>
+              
+              <p class="howto"><b>Verify by:</b> Operate the SPF for 60 minutes and count the total number of portions dispensed.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall not dispense more than 3 portions within any 60 minute period.</p></div>
+            </div>
         </article>
         <article class="req ok" data-sev="ok">
           <header><code>SPF-001</code><span class="score">score 0</span></header>
           <p class="text">The SPF shall dispense food at scheduled times.</p>
           <p class="okline">No pattern hits.</p>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Inspection</span></div>
+              <ul class="issues"><li>The term &#x27;scheduled times&#x27; is too vague; a specific time or schedule must be defined.</li></ul>
+              <p class="howto"><b>Verify by:</b> Inspect the system logs or configuration to confirm dispensing occurred at the specified time.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall dispense food at &lt;&lt;specific time/schedule&gt;&gt;.</p></div>
+            </div>
+        </article>
+        <article class="req ok" data-sev="ok">
+          <header><code>SPF-002</code><span class="score">score 0</span></header>
+          <p class="text">The SPF shall dispense a portion of 20 to 200 grams, adjustable in 5 gram increments.</p>
+          <p class="okline">No pattern hits.</p>
+          
+            <div class="model">
+              <div class="mhead"><span class="verdict v-good">good</span>
+              <span class="vm">Test</span></div>
+              
+              <p class="howto"><b>Verify by:</b> Set the SPF to various target weights within the range and verify the dispensed mass using a calibrated scale.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall dispense a portion of 20 to 200 grams, adjustable in 5 gram increments.</p></div>
+            </div>
         </article>
         <article class="req ok" data-sev="ok">
           <header><code>SPF-010</code><span class="score">score 0</span></header>
           <p class="text">The SPF shall connect to the owner&#x27;s home Wi-Fi network using WPA2 or WPA3.</p>
           <p class="okline">No pattern hits.</p>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The requirement lacks specification on the connection success criteria (e.g., connection time, required signal strength).</li></ul>
+              <p class="howto"><b>Verify by:</b> Attempt to connect the SPF to the specified Wi-Fi network and measure the time until a successful connection is established.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall connect to the owner&#x27;s home Wi-Fi network using WPA2 or WPA3 within &lt;&lt;max connection time&gt;&gt;.</p></div>
+            </div>
         </article>
         <article class="req ok" data-sev="ok">
           <header><code>SPF-013</code><span class="score">score 0</span></header>
           <p class="text">The SPF shall continue dispensing on schedule during a loss of network connectivity of up to 72 hours.</p>
           <p class="okline">No pattern hits.</p>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-needs-work">needs work</span>
+              <span class="vm">Test</span></div>
+              <ul class="issues"><li>The term &#x27;on schedule&#x27; is not defined; it needs a measurable criterion for dispensing rate or timing.</li></ul>
+              <p class="howto"><b>Verify by:</b> Simulate a network loss for 72 hours and measure the dispensed volume against the expected rate.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall continue dispensing at a rate of &lt;&lt;dispensing rate&gt;&gt; during a loss of network connectivity of up to 72 hours.</p></div>
+            </div>
         </article>
         <article class="req ok" data-sev="ok">
           <header><code>SPF-021</code><span class="score">score 0</span></header>
           <p class="text">The SPF shall operate in ambient temperatures from 0 °C to 40 °C.</p>
           <p class="okline">No pattern hits.</p>
           
+            <div class="model">
+              <div class="mhead"><span class="verdict v-good">good</span>
+              <span class="vm">Test</span></div>
+              
+              <p class="howto"><b>Verify by:</b> Place the SPF in an environmental chamber set to 0 °C and 40 °C and verify normal operation.</p>
+              <div class="rewrite"><b>Suggested rewrite</b><p>The SPF shall operate in ambient temperatures from 0 °C to 40 °C.</p></div>
+            </div>
         </article>
 <footer>Worst first. Pattern checks are deterministic; model notes are suggestions, not gospel. Nothing in this report left this machine.</footer>
 </div><script>
