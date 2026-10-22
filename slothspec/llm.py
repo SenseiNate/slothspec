@@ -76,18 +76,12 @@ Rules for your answer:
 
 # hybrid pass 2: rewrite only
 EDITOR_SYSTEM = f"""You are a senior systems engineer fixing a requirement that a reviewer already flagged.
-
-Work in two steps:
-1. problems: list every problem with the requirement in your own words. The reviewer's notes are a
-   starting point, not the full list: they can be terse, incomplete, or overreaching. Find what they missed,
-   and drop any note that would add scope the author never wrote.
-2. rewrite: fix every problem on your list.
+The reviewer's notes tell you what's wrong. Your only job is the rewrite.
 
 Rules for your rewrite:
 {RULES_REWRITE}
 - Don't invent details the author didn't write. Use <<placeholders>> instead.
-- A placeholder must name what's missing, including the unit when there is one (<<max torque, N·m>>, not <<value>>).
-- Output only "shall" statements. No commentary, no numbering, no field labels."""
+- Output only "shall" statements. No commentary, no numbering."""
 
 # Field order matters: the model fills these top to bottom. Putting rewrite right after
 # issues keeps the fix from leaking into how_to_verify (seen in v0.2.0 with gemma4:e4b).
@@ -112,16 +106,10 @@ GRADE_SCHEMA = {
     },
     "required": ["verdict", "verifiable", "singular", "issues", "verification_method", "how_to_verify"],
 }
-# problems comes first on purpose: it's the editor's scratchpad. In v0.3.0 testing the editor
-# had only a rewrite field and skipped its own reasoning (11 of 15 fixed vs 14 for single mode,
-# where the issues list is written before the rewrite).
 EDIT_SCHEMA = {
     "type": "object",
-    "properties": {
-        "problems": {"type": "array", "items": {"type": "string"}, "maxItems": 5},
-        "rewrite": {"type": "string"},
-    },
-    "required": ["problems", "rewrite"],
+    "properties": {"rewrite": {"type": "string"}},
+    "required": ["rewrite"],
 }
 
 
@@ -233,6 +221,5 @@ def grade(text: str, rule_hits: list[str], model: str, cache: Cache | None = Non
 def edit(text: str, rule_hits: list[str], issues: list[str], model: str, cache: Cache | None = None) -> str:
     """Hybrid pass 2: rewrite one flagged requirement using the grader's notes."""
     notes = "\n".join(f"- {i}" for i in [*rule_hits, *issues]) or "- (no specific notes)"
-    user = f"Requirement:\n{text}\n\nReviewer notes:\n{notes}\n\nList the problems, then rewrite it."
-    out = _call(model, EDITOR_SYSTEM, user, EDIT_SCHEMA, cache)
-    return clean_rewrite(out.get("rewrite", "")) or text
+    user = f"Requirement:\n{text}\n\nReviewer notes:\n{notes}\n\nRewrite it."
+    return _call(model, EDITOR_SYSTEM, user, EDIT_SCHEMA, cache)["rewrite"].strip()
